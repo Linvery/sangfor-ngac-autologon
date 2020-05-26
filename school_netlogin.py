@@ -4,12 +4,18 @@ import os
 import time
 import socket
 import json
+import platform
 
 # ping命令
 
 
 def ping():
-    result = os.system(u"ping 114.114.114.114 -n 3")
+    #判断操作系统
+    sys = platform.system()
+    if sys == "Windows":
+        result = os.system(u"ping 114.114.114.114 -n 3")
+    elif sys == "Linux":
+        result = os.system(u"ping 114.114.114.114 -c 3")
     return result
 
 # POST包
