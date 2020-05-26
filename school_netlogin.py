@@ -43,12 +43,12 @@ def log(status, message):
         os.makedirs('log')  #如果log文件夹不存在则创建
 
     # 写入日志到log.txt
-    log = open("log/log.txt", 'a+', encoding='utf8')
+    log = open("log/log.txt", 'a+')
     if status == 0:
-        log.write("Time:{} Status:{} 网络正常\n".format
+        log.write("Time:{} Code:{} Online!\n".format
                    (localtime, status))
     elif status == 1 or 2 or 3:
-        log.write("Time:{} Status:{} 响应包状态:{}\n".format
+        log.write("Time:{} Code:{} Response:{}\n".format
                    (localtime, status, message))
     log.close()
 
@@ -64,8 +64,12 @@ if __name__ == '__main__':
         try:
             re_message = Network_Auth()  # 返回的是HTTP回应包
             message = re_message[1:16].split(':')
+            message[0]=message[0].replace("'","")  
+            print(re_message)
+            print(message)
             if message[1] == 'true,':
                 status = 1
+                message[1]=message[1].replace(",","")
                 log(status, message)
                 print("无法连接到网络！原因：未认证")
                 print("尝试认证成功！")
