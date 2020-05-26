@@ -30,15 +30,20 @@ def log(status, message):
     # 获取本地时间
     localtime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 
+    #检测log文件夹是否存在
+    isExists = os.path.exists('log')
+    if not isExists:
+        os.makedirs('log')  #如果log文件夹不存在则创建
+
     # 写入日志到log.txt
-    loga = open("log.txt", 'a+', encoding='utf8')
+    log = open("log/log.txt", 'a+', encoding='utf8')
     if status == 0:
-        loga.write("Time:{} Status:{} 网络正常\n".format
+        log.write("Time:{} Status:{} 网络正常\n".format
                    (localtime, status))
     elif status == 1 or 2 or 3:
-        loga.write("Time:{} Status:{} 响应包状态:{}\n".format
+        log.write("Time:{} Status:{} 响应包状态:{}\n".format
                    (localtime, status, message))
-    loga.close()
+    log.close()
 
 
 if __name__ == '__main__':
@@ -46,7 +51,8 @@ if __name__ == '__main__':
         print("网络正常！")
         print("当前认证状态：Success")
         status = 0
-        log(status, None)
+        #禁用网络正常时写入log，以免产生过大的log文件。
+        #log(status, None)  
     else:
         try:
             re_message = Network_Auth()  # 返回的是HTTP回应包
