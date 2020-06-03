@@ -11,9 +11,9 @@ def ping():
     #判断操作系统
     sys = platform.system()
     if sys == "Windows":
-        result = os.system(u"ping 114.114.114.114 -n 1")
+        result = os.system(u"ping 114.114.114.114 -n 2")
     elif sys == "Linux":
-        result = os.system(u"ping 114.114.114.114 -c 3")
+        result = os.system(u"ping 114.114.114.114 -c 2")
     return result
 
 # POST包
@@ -26,14 +26,14 @@ def Network_Auth():
     "opr": "pwdLogin",
     "userName": "",
     "pwd": "",
-    "rc4Key": "",
+    "auth_tag": "",
     "rememberPwd": "1"
     }
     f = open('profile.ini') #读配置文件
     f1=f.read()
 
     f1=json.loads(f1)   #用json方法字符串转字典
-    profile_passwd=f1["password"]   #用户名
+    profile_passwd=f1["password"]   #profile的用户名
 
     now_date = str(int(round(time.time()*1000)))    #获取当前时间
     secert_pass=rc4.encrypt(now_date,profile_passwd)    #rc4加密
@@ -41,8 +41,8 @@ def Network_Auth():
     #写回到data字典中
     data['userName']=f1["username"]
     data['pwd']=secert_pass
-    data['rc4Key']=now_date
-    #print(data)
+    data['auth_tag']=now_date
+    print(data)
 
     try:
         r = requests.post(url, data)
@@ -50,6 +50,7 @@ def Network_Auth():
         return None
     else:
         login_status = r.text   # 返回的是HTTP响应包
+        #print(login_status)
         return login_status
 
 
@@ -85,7 +86,7 @@ if __name__ == '__main__':
             re_message = Network_Auth()  # 返回的是HTTP回应包
             message = re_message[1:16].split(':')
             message[0]=message[0].replace("'","")  
-            # print(re_message)
+            #print(re_message)
             # print(message)
             if message[1] == 'true,':
                 code = 1
