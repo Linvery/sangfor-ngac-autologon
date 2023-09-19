@@ -4,4 +4,4 @@
 &emsp;1.在profile.ini中填入账号密码  
 &emsp;2.python school_netlogin.py  
     
- 已测试学校：广州市信息工程职业学校
+ 
